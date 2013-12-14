@@ -1,29 +1,28 @@
-powDT <-
-function(r,k,mu,mu0,n,n0,contrast,sigma=NA,df=Inf,alpha=0.05,mcs=1e+05,testcall){
+powDT <- function(r,k,mu,mu0,n,n0,contrast,sigma=NA,df=Inf,alpha=0.05,mcs=1e+05,testcall){
 	#step 1: calculate the standardized effect size
 	theta <- mu-mu0
-    if(contrast=="means"){corr <- n/(n0+n);delta <- theta/(sigma*sqrt(1/n+1/n0))}
-    if(contrast=="props"){
-    	corr <- n*mu0*(1-mu0)/(n0*mu*(1-mu)+n*mu0*(1-mu0))
-    	delta <- theta/sqrt(mu*(1-mu)/n+mu0*(1-mu0)/n0)
-    }
+	if(contrast=="props" & is.na(sigma)){
+		pooled.mu <- (mu*n*k+mu0*n0)/(n*k+n0)
+		sigma <- sqrt(pooled.mu*(1-pooled.mu))
+	}
+	corr <- n/(n0+n)
+	delta <- theta/(sigma*sqrt(1/n+1/n0))
     
-    #step 2: calculate the critical values 
-    if(testcall=="SD"){
-    	cvSet <- cvSDDT(k=k, alpha=alpha, alternative="U", df=df, corr=corr)
-    }
-    if(testcall=="SU"){
-    	cvSet <- cvSUDT(k=k, alpha=alpha, alternative="U", df=df, corr=corr)
-    }
+  #step 2: calculate the critical values 
+  if(testcall=="SD"){
+    cvSet <- cvSDDT(k=k, alpha=alpha, alternative="U", df=df, corr=corr)
+  }
+  if(testcall=="SU"){
+    cvSet <- cvSUDT(k=k, alpha=alpha, alternative="U", df=df, corr=corr)
+  }
     
-    #step 3: numerically approximate the power by monte carlo.
-    z0 <- rnorm(mcs)
-    if(df == Inf){u <- 1}else{u <- sqrt(rchisq(mcs,df=df)/df)}
-    dvSet <- sapply(cvSet,function(x){(x*u+sqrt(corr)*z0)/sqrt(1-corr)})
-    # with columns corresponds to c1,c2,...,ck
-    list.J.Fun <- list(J2.fun,J3.fun,J4.fun,J5.fun,J6.fun,J7.fun,J8.fun,J9.fun,J10.fun,J11.fun,J12.fun,J13.fun,J14.fun,J15.fun,J16.fun)
-    
-    if(testcall=="SU"){
+  #step 3: numerically approximate the power by monte carlo.
+  z0 <- rnorm(mcs)
+  if(df == Inf){u <- 1}else{u <- sqrt(rchisq(mcs,df=df)/df)}
+  dvSet <- sapply(cvSet,function(x){(x*u+sqrt(corr)*z0)/sqrt(1-corr)})
+  # with columns corresponds to c1,c2,...,ck
+  list.J.Fun <- list(J2.fun,J3.fun,J4.fun,J5.fun,J6.fun,J7.fun,J8.fun,J9.fun,J10.fun,J11.fun,J12.fun,J13.fun,J14.fun,J15.fun,J16.fun)
+  if(testcall=="SU"){
     	#initialize the pow as the probability of rejecting all the k nulls
     	pow <- mean((1-pnorm(dvSet[,1],mean=delta/sqrt(1-corr)))^k)
     	if(r<k){
@@ -45,10 +44,10 @@ function(r,k,mu,mu0,n,n0,contrast,sigma=NA,df=Inf,alpha=0.05,mcs=1e+05,testcall)
     			pow <- pow+choose(k,s)*mean(p.rej*Js)
     			}
     		}
-    	  }
-        }
+    	}
+  }
 
-    if(testcall=="SD"){
+  if(testcall=="SD"){
     	powSet <- NULL #with elements correspondng to reject 1, 2,...,k in sequence
     	Psi.d1 <- 1-pnorm(dvSet[,k],mean=delta/sqrt(1-corr)) 
     	J1 <- Psi.d1
@@ -65,8 +64,8 @@ function(r,k,mu,mu0,n,n0,contrast,sigma=NA,df=Inf,alpha=0.05,mcs=1e+05,testcall)
     			list.J <- c(list.J,list(Js))
     			list.Psi <- c(list.Psi,list(Psi.ds))
     		}
-    		}
-    	pow <- sum(powSet[r:k]) 
     	}
-    return(pow)
-    }
+      pow <- sum(powSet[r:k]) 
+  }
+pow
+}

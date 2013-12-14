@@ -13,7 +13,7 @@ cvSDDT(k,alpha=0.05,alternative="U",df = Inf,corr = 0.5,corr.matrix=NA)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{k}{
-Number of hypotheses to be tested, \eqn{k\ge 2}.
+Number of hypotheses to be tested, \eqn{k\ge 2} and \eqn{k\le 16}.
 }
   \item{alpha}{
 The pre-specified overall significance level, default=0.05.

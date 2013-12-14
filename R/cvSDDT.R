@@ -1,5 +1,8 @@
 cvSDDT <-
 function(k,alpha=0.05,alternative="U",df=Inf,corr=0.5,corr.matrix=NA){
+  if(k > 16){
+    stop("The funtion is not applicable to the situations where the number of tests exceeds 16")
+  }
   cvSet <- NULL
   ##calculate C1
   if(alternative=="U"){

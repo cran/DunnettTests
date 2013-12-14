@@ -1,6 +1,9 @@
 qvSDDT <-
 function(teststats,alternative="U",df=Inf,corr = 0.5,corr.matrix = NA){
   k <- length(teststats)
+  if(k > 16){
+    stop("The funtion is not applicable to situations where the number of tests exceeds 16")
+  }
   if(is.matrix(corr.matrix)==FALSE){
   corr.matrix <- diag(1,k)
   corr.matrix[which(corr.matrix!=1)] <- corr
@@ -49,7 +52,7 @@ function(teststats,alternative="U",df=Inf,corr = 0.5,corr.matrix = NA){
   }
   pvSet <- c(pvSet,Pk)
   qvSet <- c(qvSet,max(pvSet))
-  Results <- list(t.ordered,round(pvSet,3),round(qvSet,3))
-  names(Results) <- c("ordered test statistics","P-values of ordered test statistics","Adjusted P-values of ordered test statistics")
+  Results <- list(t.ordered,round(qvSet,3))
+  names(Results) <- c("ordered test statistics","Adjusted P-values of ordered test statistics")
   return(Results)
 }

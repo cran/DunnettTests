@@ -32,7 +32,6 @@ Specified for unequally correlated test statistics, which is the correlation mat
 \value{
 Return a LIST containing:
 \item{"ordered test statistics"}{ordered test statistics from largest to smallest}
-\item{"P-values of ordered test statistics"}{unadjusted P-values correspond to the ordered test statistics}
 \item{"Adjusted P-values of ordered test statistics"}{adjusted P-values correspond to the ordered test statistics}
 }
 

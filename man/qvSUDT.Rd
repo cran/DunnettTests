@@ -35,7 +35,6 @@ The number of monte carlo sample points to numerically approximate the probabili
 \value{
 Return a LIST containing:
 \item{"ordered test statistics"}{ordered test statistics from smallest to largest}
-\item{"P-values of ordered test statistics"}{unadjusted P-values correspond to the ordered test statistics}
 \item{"Adjusted P-values of ordered test statistics"}{adjusted P-values correspond to the ordered test statistics}
 }
 

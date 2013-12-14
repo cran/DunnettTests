@@ -3,10 +3,13 @@ function(teststats,alternative="U",df=Inf,corr=0.5,corr.matrix=NA,mcs=1e+05){
   k <- length(teststats)
   names(teststats) <- paste("H",1:k,sep="")
   if(k > 16){
-  	stop("The funtion is not applicable to the situations where the number of tests exceeds 16")
+  	stop("The funtion is not applicable to situations where the number of tests exceeds 16 \n")
   }
-   if(k > 8){
-  	cat("The calculation will be time consuming")
+  if(k >= 6 & k<=10){
+    cat("The calculation may take up to several minutes, please be patient \n")
+  }
+  if(k > 10){
+  	cat("The calculation will be time consuming \n")
   }
   
   #order the test statistcis
@@ -29,7 +32,6 @@ function(teststats,alternative="U",df=Inf,corr=0.5,corr.matrix=NA,mcs=1e+05){
     }
 
   #calculate the Q1
-  cat("In calculating Q1 \n")
   if(alternative=="U"){
     P1 <- 1-pt(t.ordered[1],df)
   }
@@ -83,7 +85,8 @@ list.J.Fun <-list(J2.fun,J3.fun,J4.fun,J5.fun,J6.fun,J7.fun,J8.fun,J9.fun,J10.fu
   
   #now solve for P2-pvSet by iterations, respectively
   for(j in 2:k){
-    cat("In calculating Q",j,"\n",sep="")
+    if(j>=6){
+      cat(paste("In calculating Q",j,"\n",sep=""))}
     low.try<-1e-04
     up.try<-0.5
     low.err <- Pj.fun(low.try,j)
@@ -102,7 +105,7 @@ list.J.Fun <-list(J2.fun,J3.fun,J4.fun,J5.fun,J6.fun,J7.fun,J8.fun,J9.fun,J10.fu
     pvSet <- c(pvSet,try.new)
     qvSet <- c(qvSet,min(pvSet))
   }
-  Results <- list(t.ordered,as.vector(round(pvSet,3)),as.vector(round(qvSet,3)))
-  names(Results) <- c("ordered test statistics","P-values of ordered test statistics","Adjusted P-values of ordered test statistics")
+  Results <- list(t.ordered,as.vector(round(qvSet,3)))
+  names(Results) <- c("ordered test statistics","Adjusted P-values of ordered test statistics")
   return(Results)
 }

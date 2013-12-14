@@ -43,6 +43,7 @@ function(k,alpha=0.05,alternative="U",df=Inf,corr=0.5,corr.matrix=NA,mcs=1e+05){
   	cvSet <- c(cvSet,c2)
  	
   	##calculate c3-cvSet
+  	if(k >= 3){
   	list.J.Fun <- list(J2.fun,J3.fun,J4.fun,J5.fun,J6.fun,J7.fun,J8.fun,J9.fun,J10.fun,J11.fun,J12.fun,J13.fun,J14.fun,J15.fun,J16.fun)
   	for(t in 3:k){
   	    Psi.dts <- psi.fun(cvSet[t-1],corr)
@@ -52,6 +53,7 @@ function(k,alpha=0.05,alternative="U",df=Inf,corr=0.5,corr.matrix=NA,mcs=1e+05){
         ct <- uniroot(cj.fun.balanced,corr=corr,J.fun=list.J.Fun[[t-1]],list.J=list.J,list.Psi=list.Psi,interval= c(0,10),tol=1e-05)$root
   		cvSet <- c(cvSet,ct)
   		}    
+  	}
   	}
 
   #when the correlations are not equal
@@ -94,6 +96,7 @@ function(k,alpha=0.05,alternative="U",df=Inf,corr=0.5,corr.matrix=NA,mcs=1e+05){
   	cvSet <- c(cvSet,c2)
   	
   	##calculate c3-cvSet
+  	if(k >= 3){
   	list.J.Fun <- list(J2.fun,J3.fun,J4.fun,J5.fun,J6.fun,J7.fun,J8.fun,J9.fun,J10.fun,J11.fun,J12.fun,J13.fun,J14.fun,J15.fun,J16.fun)
   	for(t in 3:k){
   	    #Notes: for the calculation of ct, t=3,...,k, all of Psi(di) and Ji should be recalculated for the new corr.min[t-1] and corr.max[t-1]
@@ -120,6 +123,7 @@ function(k,alpha=0.05,alternative="U",df=Inf,corr=0.5,corr.matrix=NA,mcs=1e+05){
   		ct <-uniroot(cj.fun.unbalanced,corr.min=corr.min[t-1],corr.max=corr.max[t-1],J.fun=list.J.Fun[[t-1]],list.J.min=list.J.min,list.Psi.min=list.Psi.min,list.J.max=list.J.max,list.Psi.max=list.Psi.max,interval=c(0,10),tol=1e-05)$root
   		cvSet <- c(cvSet,ct)
   	}
+}
 }
 names(cvSet)=paste("c",seq(1,k,by=1),sep="")
 return(round(cvSet,3))

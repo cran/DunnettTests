@@ -73,9 +73,9 @@ FAN XIA <phoebexia@yahoo.com>
 }
 
 \examples{
-\dontrun{
+% \dontrun{
 nvDT(2, 0.95, r=1, k=3, mu=0.7, mu0=0.5, contrast="props",dist="zdist", testcall="SD")
-}
+% }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
